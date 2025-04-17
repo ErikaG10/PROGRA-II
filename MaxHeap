@@ -1,0 +1,155 @@
+package heapsOff;
+
+public class MaxHeap implements Heap {
+	
+	private int[] heap;
+	private int cant;
+	
+	@Override
+	public void inicializarHeap() {
+		heap = new int[100];
+		cant = 0;
+	}
+	
+	@Override
+	public void inicializarHeap(int[] arr) {
+		heap = arr.clone();
+		cant = arr.length;
+		
+		for(int i = cant-1; i != -1; i--)
+			siftDesc(i);
+	}
+	
+	
+	private void siftAsc(int i) {
+		int padre = (i-1)/2;
+		while((i != 0) && (heap[i] > heap[padre])) {
+			int aux = heap[i];
+			heap[i] = heap[padre];
+			heap[padre] = aux;
+			
+			i = padre;
+			padre = (i-1)/2;
+		}
+	}
+	
+	private void siftDesc(int i) {
+		int izq = 2 * i + 1;
+		int der = 2 * i + 2;
+		while(((izq < cant) && (heap[i] < heap[izq])) || ((der < cant) && (heap[i] < heap[der]))) {
+			int mayor;
+			
+			if((heap[izq] >= heap[der]) || (der >= cant)) 
+				mayor = izq;
+			else 
+				mayor = der;
+			
+			
+			int aux = heap[i];
+			heap[i] = heap[mayor];
+			heap[mayor] = aux;
+			
+			i = mayor;
+			izq = 2 * i + 1;
+			der = 2 * i + 2;		
+		}
+	}
+	
+
+	@Override
+	public boolean heapVacio() {
+		return (cant == 0);
+	}
+
+	@Override
+	public int raiz() {
+		if(!heapVacio())
+			return heap[0];
+		else
+			return -1;
+	}
+	
+	@Override
+	public int tamanio() {
+		return cant;
+	}
+
+
+	@Override
+	public void insertar(int valor) {
+		heap[cant] = valor;
+		cant++;
+		siftAsc(cant-1);
+	}
+	
+	//Se elimina la raíz.
+	@Override
+	public void eliminar() {
+		int aux = heap[0];
+		heap[0] = heap[cant-1];
+		heap[cant-1] = aux;
+		
+		cant--;
+		siftDesc(0);
+	}
+
+	@Override
+	public void actualizar(int previo, int nuevo) {
+		int p = cant - 1;
+		while(p >= 0 && heap[p] != previo) 
+			p--;
+		
+		if(p != -1) {
+			heap[p] = nuevo;
+			if(heap[p] > heap[((p-1)/2)])
+				siftAsc(p);
+			else
+				siftDesc(p);
+		}
+
+	}
+	
+	
+	
+	
+	public void mostrarHeap() {
+		System.out.print("[");
+		for(int i = 0; i < cant; i++) {
+			System.out.print(heap[i]);
+			if(i != (cant-1))
+				System.out.print(", ");
+		}
+		System.out.println("]");
+	}
+	
+	public void mostrarHeapArbol() {
+	    if (cant == 0) {
+	        System.out.println("(empty)");
+	        return;
+	    }
+
+	    int levels = (int) Math.floor(Math.log(cant) / Math.log(2)) + 1;
+	    int maxWidth = (int) Math.pow(2, levels) * 2;
+
+	    int index = 0;
+	    for (int level = 0; level < levels; level++) {
+	        int levelNodes = (int) Math.pow(2, level);
+	        int spacing = maxWidth / (levelNodes + 1);
+
+	        // leading space
+	        for (int s = 0; s < spacing / 2; s++) System.out.print(" ");
+
+	        for (int j = 0; j < levelNodes && index < cant; j++) {
+	            System.out.printf("%2d", heap[index++]);
+
+	            // spacing between nodes
+	            for (int s = 0; s < spacing; s++) System.out.print(" ");
+	        }
+
+	        System.out.println();
+	    }
+	}
+
+
+
+}
