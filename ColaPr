@@ -1,0 +1,10 @@
+package heapsOff;
+
+public interface ColaPr {
+	void inicializarCola();
+	void acolarPrioridad(char valor, int prioridad);
+	void desacolar();
+	char primero();
+	int prioridad();
+	boolean colaVacia();
+}
