@@ -4,15 +4,17 @@ public class MaxHeap implements Heap {
 	
 	private int[] heap;
 	private int cant;
-	
+
+
 	@Override
-	public void inicializarHeap() {
+	public void inicializarHeap() {    //crear un arreglo de cero
 		heap = new int[100];
 		cant = 0;
 	}
-	
+
+
 	@Override
-	public void inicializarHeap(int[] arr) {
+	public void construirHeap(int[] arr) {      //crear un heap apartir de un arreglo existente
 		heap = arr.clone();
 		cant = arr.length;
 		
