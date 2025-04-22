@@ -29,7 +29,28 @@ public class MetodosHeaps {
 		
 		return ordenado;
 	}
-	
+
+
+	public static int[] topKElementos(int[] arr, int k) {
+		Heap minHeap = new MinHeap();
+		minHeap.inicializarHeap();
+		
+		int[] elementos = new int[k];
+		
+		for(int i = 0; i < arr.length; i++) {
+			minHeap.insertar(arr[i]);
+			
+			if(minHeap.tamanio() > k)
+				minHeap.eliminar();
+		}
+		
+		for(int j = 0; j < elementos.length; j++) {
+			elementos[j] = minHeap.raiz();
+			minHeap.eliminar();
+		}
+			
+		return elementos;				
+	}
 	
 	
 	
