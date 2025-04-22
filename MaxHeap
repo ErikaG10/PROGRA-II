@@ -23,7 +23,7 @@ public class MaxHeap implements Heap {
 	}
 	
 	
-	private void siftAsc(int i) {
+	private void flotar(int i) {
 		int padre = (i-1)/2;
 		while((i != 0) && (heap[i] > heap[padre])) {
 			int aux = heap[i];
