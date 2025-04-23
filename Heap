@@ -1,38 +1,12 @@
-package heapsOff;
+package api;
 
 public interface Heap {
-	//Crea un Heap Vacío 
 	void inicializarHeap(); 
-	//O(1)
-
-	//Heapify
-	void inicializarHeap(int[] arr); 
-	//O(n)
-	
-	//Revisa si está vacío 
 	boolean heapVacio(); 
-	//O(1)
-
-	//Primer nodo
 	int raiz(); 
-	//O(1)
-	
-	//La cantidad de elementos
 	int tamanio();
-	//O(1)
-	
-	//Añade un nodo 
 	void insertar(int valor); 
-	//O(log n)
-	
-	//Elimina el primer nodo 
 	void eliminar(); 
-	//O(log n)
-	
-	//Cambia el valor de un nodo 
-	void actualizar(int previo, int nuevo); 
-	//O(n)
-	
-	void mostrarHeap(); //Debug
-	void mostrarHeapArbol(); //Debug
+	void construirHeap(int[] arr); 
 }
+
