@@ -1,12 +1,14 @@
-package heapsOff;
+package algoritmos;
+import api.Heap;
+import imp.MinHeap;
 
 public class MetodosHeaps {
 	
-	public static int[] heapSortAsc(int[] arr) {
+	public static int[] heapSort(int[] arr) {
 		int[] ordenado = new int[arr.length];
 		Heap auxHeap = new MinHeap();
 		
-		auxHeap.inicializarHeap(arr);
+		auxHeap.construirHeap(arr);
 		
 		for(int i = 0; !auxHeap.heapVacio(); i++) {
 			ordenado[i] = auxHeap.raiz();
@@ -15,22 +17,8 @@ public class MetodosHeaps {
 		
 		return ordenado;
 	}
+		
 	
-	public static int[] heapSortDesc(int[] arr) {
-		int[] ordenado = new int[arr.length];
-		Heap auxHeap = new MaxHeap();
-		
-		auxHeap.inicializarHeap(arr);
-		
-		for(int i = 0; !auxHeap.heapVacio(); i++) {
-			ordenado[i] = auxHeap.raiz();
-			auxHeap.eliminar();
-		}
-		
-		return ordenado;
-	}
-
-
 	public static int[] topKElementos(int[] arr, int k) {
 		Heap minHeap = new MinHeap();
 		minHeap.inicializarHeap();
@@ -44,7 +32,7 @@ public class MetodosHeaps {
 				minHeap.eliminar();
 		}
 		
-		for(int j = 0; j < elementos.length; j++) {
+		for(int j = (k-1); j >= 0; j--) {
 			elementos[j] = minHeap.raiz();
 			minHeap.eliminar();
 		}
