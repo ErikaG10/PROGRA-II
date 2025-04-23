@@ -1,10 +1,11 @@
-package heapsOff;
+package imp;
+import api.ColaPr;
 
 public class ColaPrHeaps implements ColaPr {
 	
 	class Elemento{
 		int prioridad;
-		char valor;
+		int valor;
 	}
 	
 	private Elemento[] heap;
@@ -16,9 +17,9 @@ public class ColaPrHeaps implements ColaPr {
 		cant = 0;
 	}
 	
-	private void intercambiarElementos(Elemento foo, Elemento bar) {
+	private void intercambiarNodos(Elemento foo, Elemento bar) {
 		int auxP = foo.prioridad;
-		char auxV = foo.valor;
+		int auxV = foo.valor;
 		
 		foo.prioridad = bar.prioridad;
 		foo.valor = bar.valor;
@@ -28,30 +29,30 @@ public class ColaPrHeaps implements ColaPr {
 	}
 	
 	
-	private void siftAsc(int i) {
+	private void flotar(int i) {
 		int padre = (i-1)/2;
 		while((i != 0) && (heap[i].prioridad > heap[padre].prioridad)) {
 			
-			intercambiarElementos(heap[i], heap[padre]);
+			intercambiarNodos(heap[i], heap[padre]);
 			
 			i = padre;
 			padre = (i-1)/2;
 		}
 	}
 	
-	private void siftDesc(int i) {
+	private void hundir(int i) {
 		int izq = 2 * i + 1;
 		int der = 2 * i + 2;
 		while(((izq < cant) && (heap[i].prioridad < heap[izq].prioridad)) || ((der < cant) && (heap[i].prioridad < heap[der].prioridad))) {
 			int mayor;
 			
-			if((heap[izq].prioridad >= heap[der].prioridad) || (der >= cant)) 
+			if(der >= cant || (heap[izq].prioridad >= heap[der].prioridad)) 
 				mayor = izq;
 			else
 				mayor = der;
 			
 			
-			intercambiarElementos(heap[i], heap[mayor]);
+			intercambiarNodos(heap[i], heap[mayor]);
 			
 			i = mayor;
 			izq = 2 * i + 1;
@@ -60,31 +61,30 @@ public class ColaPrHeaps implements ColaPr {
 	}
 
 	@Override
-	public void acolarPrioridad(char valor, int prioridad) {
+	public void acolarPrioridad(int valor, int prioridad) {
 		heap[cant] = new Elemento();
 		heap[cant].prioridad = prioridad;
 		heap[cant].valor = valor;
 		cant++;
 		
-		siftAsc(cant-1);
-
+		flotar(cant-1);
 	}
 
 	@Override
 	public void desacolar() {
-		intercambiarElementos(heap[0], heap[cant-1]);
+		intercambiarNodos(heap[0], heap[cant-1]);
 		
 		cant--;
-		siftDesc(0);
+		hundir(0);
 
 	}
 
 	@Override
-	public char primero() {
+	public int primero() {
 		if(!colaVacia())
 			return heap[0].valor;
 		else
-			return '-';
+			return -1;
 	}
 	
 	@Override
