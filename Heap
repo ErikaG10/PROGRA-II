@@ -5,8 +5,8 @@ public interface Heap {
 	boolean heapVacio(); 
 	int raiz(); 
 	int tamanio();
-	void insertar(int valor); 
-	void eliminar(); 
+	void insertar(int valor);  // ENCOLAR: se inserta al final del arreglo o arbol y aplicamos upheap o flotar para que se conserve el orden en el HEAP. El costo es O(log n)
+	void eliminar(); //DESENCOLAR: se intercambiar el primero con el ultimo, y aplicamos downheap o hundir, comparo con los hijos y me quedo con el mayor. El costo es O(log n)
 	void construirHeap(int[] arr); 
 }
 
