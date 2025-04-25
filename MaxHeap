@@ -87,7 +87,7 @@ public class MaxHeap implements Heap {
 	
 	
 	@Override
-	public void construirHeap(int[] arr) {
+	public void construirHeap(int[] arr) {    //se construye apartir de un arreglo desordenado.
 		heap = arr.clone();
 		cant = arr.length;
 		
