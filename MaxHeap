@@ -11,16 +11,18 @@ public class MaxHeap implements Heap {
 		heap = new int[100];
 		cant = 0;
 	}
-	
-	
-	private void flotar(int i) {
+
+
+	// EL I DE ESTAS DOS FUNCIONES SON LOS INDICES!!
+
+	private void flotar(int i) {   //se usa al INSERTAR
 		int padre = (i-1)/2;
-		while((i != 0) && (heap[i] > heap[padre])) {
+		while((i != 0) && (heap[i] > heap[padre])) { 
 			int aux = heap[i];
 			heap[i] = heap[padre];
 			heap[padre] = aux;
 			
-			i = padre;
+			i = padre;        //si se intercambian los valores, tambien los indices
 			padre = (i-1)/2;
 		}
 	}
@@ -28,20 +30,24 @@ public class MaxHeap implements Heap {
 	private void hundir(int i) {
 		int izq = 2 * i + 1;
 		int der = 2 * i + 2;
-		while(((izq < cant) && (heap[i] < heap[izq])) || ((der < cant) && (heap[i] < heap[der]))) {
-			int mayor;
+		while(((izq < cant) && (heap[i] < heap[izq])) || ((der < cant) && (heap[i] < heap[der]))) { // se evalua que existe un hijo u otro.
+													//Luego, el padre es menor que su hijo? o con el otro?
 			
-			if(der >= cant || (heap[izq] >= heap[der])) 
+			int mayor;
+			//si ambos hijos son mas grandes que su padre, entonces buscamos el mayor de todos para intercambiar
+
+			if(der >= cant || (heap[izq] >= heap[der])) // se pregunta si existe un hijo derecho? xq de no haber el elegido sera el izquierdo
+									//O si hay, comparar entre ellos dos.
 				mayor = izq;
 			else 
 				mayor = der;
 			
-			
+			//una vez establecido con quien intercambiamos, lo hacemos
 			int aux = heap[i];
 			heap[i] = heap[mayor];
 			heap[mayor] = aux;
 			
-			i = mayor;
+			i = mayor;    //despues del intercambio, se realiza para los indices. este sera el nuevo padre para compara con sus dos hijos
 			izq = 2 * i + 1;
 			der = 2 * i + 2;		
 		}
