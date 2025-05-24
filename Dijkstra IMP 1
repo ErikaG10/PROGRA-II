@@ -1,0 +1,41 @@
+public class Dijkstra {
+	
+	 public static void delLibro(int tamanio, int[][] mAdy, int nodo, int[] dist, int[] pred) {
+        boolean[] visitados = new boolean[tamanio];
+        
+        for (int v = 0; v < tamanio; ++v) {
+            dist[v] = Integer.MAX_VALUE;
+            pred[v] = -1;
+            visitados[v] = false;
+        }
+        dist[nodo] = 0;
+
+        while (true) {
+            int u = -1;
+            int sd = Integer.MAX_VALUE;
+            for (int i = 0; i < tamanio; i++) {
+                if (!visitados[i] && dist[i] < sd) {
+                    sd = dist[i];
+                    u = i;
+                }
+            }
+            if (u == -1) break; // no reachable unvisited vertex
+            
+            visitados[u] = true;
+            
+            for (int v = 0; v < tamanio; v++) {
+                int w = mAdy[u][v];
+                if (v == u) continue;
+                
+                // Check for valid edge and avoid overflow
+                if (dist[u] != Integer.MAX_VALUE && w != Integer.MAX_VALUE) {
+                    long newLen = (long) dist[u] + w;
+                    if (newLen < dist[v]) {
+                        dist[v] = (int) newLen;
+                        pred[v] = u;
+                    }
+                }
+            }
+        }
+    }
+}
