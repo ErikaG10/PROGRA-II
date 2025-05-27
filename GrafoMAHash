@@ -1,0 +1,85 @@
+public class GrafoMAHash implements Grafo{
+	
+	private final int max = 77;		
+	private int[][] mAdy;				
+	private int cantidadVertices;		
+	private char[] etiquetas;
+	private HashMap<Character, Integer> mapaVertices;
+	
+	@Override
+	public void inicializarGrafo() {
+		mAdy = new int[max][max];
+		etiquetas = new char[max];
+		cantidadVertices = 0;
+		mapaVertices = new HashMap<>();
+	}
+	
+	
+	@Override
+	public void agregarVertice(char x) {
+		etiquetas[cantidadVertices] = x;
+		mapaVertices.put(x, cantidadVertices);
+		for(int i = 0; i <= cantidadVertices; i++) {
+			mAdy[i][cantidadVertices] = 0;
+			mAdy[cantidadVertices][i] = 0;
+		}
+		
+		cantidadVertices++;
+	}
+	
+	
+	@Override
+	public void eliminarVertice(char x) {
+		int inx = mapaVertices.get(x);
+		
+		etiquetas[inx] = etiquetas[cantidadVertices - 1];
+		
+		for(int j = 0; j < cantidadVertices; j++)
+			mAdy[inx][j] = mAdy[cantidadVertices-1][j];
+		
+		for(int j = 0; j < cantidadVertices; j++)
+			mAdy[j][inx] = mAdy[j][cantidadVertices-1];
+		
+		cantidadVertices--;
+	}
+	
+	@Override
+	public void agregarArista(char x, char y, int w) {
+		int origen = mapaVertices.get(x);
+		int destino = mapaVertices.get(y);
+		mAdy[origen][destino] = w;
+	}
+	
+	
+	@Override
+	public void eliminarArista(char x, char y) {
+		int origen = mapaVertices.get(x);
+		int destino = mapaVertices.get(y);
+		mAdy[origen][destino] = 0;
+	}
+	
+	
+	@Override
+	public int pesoArista(char x, char y) {
+		int origen = mapaVertices.get(x);
+		int destino = mapaVertices.get(y);
+		return mAdy[origen][destino];
+	}
+	
+	
+	@Override
+	public boolean existeArista(char x, char y) {
+		int origen = mapaVertices.get(x);
+		int destino = mapaVertices.get(y);
+		return (mAdy[origen][destino] != 0);
+	}
+	
+	@Override
+	public Conjunto vertices() {
+		Conjunto c = new ConjuntoAC();
+		c.inicializarConjunto();
+		for(int i = 0; i < cantidadVertices; i++)
+			c.agregar(etiquetas[i]);
+		return c;
+	}
+}
