@@ -1,0 +1,119 @@
+public class MinHeap{
+	
+	class Elemento{
+		int prioridad;
+		int valor;
+	}
+	
+	private Elemento[] heap;
+	private int cant;
+	private HashMap<Integer, Integer> mapaNodos;
+
+	
+	public void inicializarHeap() {
+		heap = new Elemento[100];
+		cant = 0;
+		mapaNodos = new HashMap<>();
+	}
+	
+	private void intercambiarNodos(Elemento foo, Elemento bar) {
+		int auxP = foo.prioridad;
+		int auxV = foo.valor;
+		
+		foo.prioridad = bar.prioridad;
+		foo.valor = bar.valor;
+		
+		bar.prioridad = auxP;
+		bar.valor = auxV;
+	}
+	
+	
+	private void flotar(int i) {
+		int padre = (i-1)/2;
+		while((i != 0) && (heap[i].prioridad < heap[padre].prioridad)) {
+			
+			intercambiarNodos(heap[i], heap[padre]);
+			
+			i = padre;
+			padre = (i-1)/2;
+		}
+	}
+	
+	private void hundir(int i) {
+		int izq = 2 * i + 1;
+		int der = 2 * i + 2;
+		while(((izq < cant) && (heap[i].prioridad > heap[izq].prioridad)) || ((der < cant) && (heap[i].prioridad > heap[der].prioridad))) {
+			int mayor;
+			
+			if(der >= cant || (heap[izq].prioridad <= heap[der].prioridad)) 
+				mayor = izq;
+			else
+				mayor = der;
+			
+			
+			intercambiarNodos(heap[i], heap[mayor]);
+			
+			i = mayor;
+			izq = 2 * i + 1;
+			der = 2 * i + 2;		
+		}
+	}
+
+	
+	public void insertar(int valor, int prioridad) {
+		heap[cant] = new Elemento();
+		heap[cant].prioridad = prioridad;
+		heap[cant].valor = valor;
+		mapaNodos.put(valor, cant);
+		cant++;
+		
+		flotar(cant-1);
+	}
+
+	
+	public void desacolar() {
+		intercambiarNodos(heap[0], heap[cant-1]);
+		
+		cant--;
+		hundir(0);
+
+	}
+
+	
+	public int primero() {
+		if(!heapVacio())
+			return heap[0].valor;
+		else
+			return -1;
+	}
+	
+	
+	public int raiz() {
+		if(!heapVacio())
+			return heap[0].prioridad;
+		else
+			return -1;
+	}
+
+	
+	public boolean heapVacio() {
+		return (cant == 0);
+	}
+	
+	public void aumentarClave(int valor, int nuevaPr) {
+		int inx = mapaNodos.get(valor);
+		if((inx != -1) && (nuevaPr > heap[inx].prioridad)) {
+			heap[inx].prioridad = nuevaPr;
+			hundir(inx);
+		}
+	}
+	
+	public void disminuirClave(int valor, int nuevaPr) {
+		int inx = mapaNodos.get(valor);
+		if((inx != -1) && (nuevaPr < heap[inx].prioridad)) {
+			heap[inx].prioridad = nuevaPr;
+			flotar(inx);
+		}
+	}
+
+}
