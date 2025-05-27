@@ -1,0 +1,101 @@
+public static Object[] dijkstraMA(Grafo grafo, char nodo) {
+  int cant = GrafoUtils.tamanioGrafo(grafo);
+  int[] distancia = new int[cant];
+  boolean[] visitados = new boolean[cant];
+  char[] previos = new char[cant];
+  char[] vertices = GrafoUtils.listaVertices(grafo.vertices(), cant);
+  
+  for(int v = 0; v < cant ; v++) {
+    if(vertices[v] == nodo){
+      distancia[v] = 0;
+      visitados[v] = true;
+      previos[v] = '-';
+    }
+    else {
+      int distInicial = grafo.pesoArista(nodo, vertices[v]);
+      if(distInicial != 0) {
+        distancia[v] = distInicial;
+        previos[v] = nodo;
+      }
+      else {
+        distancia[v] = Integer.MAX_VALUE;
+        previos[v] = '-';
+      }
+    }
+  }
+  
+  boolean quedanVertices = true;
+  while(quedanVertices) {
+    int seleccionado = -1;
+    int distanciaMenor = Integer.MAX_VALUE;
+    for(int u = 0; u < cant; u++) {
+      if(!visitados[u] && (distancia[u] < distanciaMenor)) {
+        seleccionado = u;
+        distanciaMenor = distancia[u];
+      }
+    }
+    if(seleccionado == -1) {quedanVertices = false; break;}
+    
+    visitados[seleccionado] = true;
+    for(int vecino = 0; vecino < cant; vecino++) {
+      if(vecino == seleccionado) continue;
+      
+      int distVecinos = grafo.pesoArista(vertices[seleccionado], vertices[vecino]);
+      if((distVecinos != 0) && ((distancia[seleccionado] + distVecinos) < distancia[vecino])) { 
+        distancia[vecino] = distancia[seleccionado] + distVecinos;
+        previos[vecino] = vertices[seleccionado];
+      }
+    }
+  }
+  return new Object[] {vertices, distancia, previos};
+}
+
+
+public static Object[] dijkstraMAHeap(Grafo grafo, char nodo) {
+  int cant = GrafoUtils.tamanioGrafo(grafo);
+  int[] distancia = new int[cant];
+  char[] previos = new char[cant];
+  char[] vertices = GrafoUtils.listaVertices(grafo.vertices(), cant);
+  MinHeap colaPr = new MinHeap();
+  
+  colaPr.inicializarHeap();
+  for(int v = 0; v < cant ; v++) {
+    if(vertices[v] == nodo){
+      distancia[v] = 0;
+      previos[v] = '-';
+    }
+    else {
+      int distInicial = grafo.pesoArista(nodo, vertices[v]);
+      if(distInicial != 0) {
+        distancia[v] = distInicial;
+        previos[v] = nodo;
+      }
+      else {
+        distancia[v] = Integer.MAX_VALUE;
+        previos[v] = '-';
+      }
+      colaPr.insertar(v, distancia[v]);
+    }
+  }
+  
+  boolean quedanVertices = true;
+  while(quedanVertices) {
+    if(colaPr.raiz() == Integer.MAX_VALUE) {quedanVertices = false; break;}
+    
+    int seleccionado = colaPr.primero();
+    colaPr.desacolar();
+    
+    for(int vecino = 0; vecino < cant; vecino++) {
+      if(vecino == seleccionado) continue;
+      
+      int distVecinos = grafo.pesoArista(vertices[seleccionado], vertices[vecino]);
+      if((distVecinos != 0) && ((distancia[seleccionado] + distVecinos) < distancia[vecino])) { 
+        distancia[vecino] = distancia[seleccionado] + distVecinos;
+        colaPr.disminuirClave(vecino, distancia[vecino]);
+        previos[vecino] = vertices[seleccionado];
+      }
+    }
+  }
+  return new Object[] {vertices, distancia, previos};
+}
+	
