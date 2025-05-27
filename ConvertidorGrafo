@@ -1,0 +1,43 @@
+public class ConvertidorGrafo {
+	
+	public static Grafo distanciasMinimas(Grafo grafo, char nodo) {
+		
+		Object[] resultado = Dijkstra.dijkstraMA(grafo, nodo);
+		
+		char[] vertices = (char[]) resultado[0];
+		int[] distancias = (int[]) resultado[1];
+		Grafo nuevo = new GrafoMA();
+		nuevo.inicializarGrafo();
+		
+		for(int v = 0; v < vertices.length; v++) {
+			nuevo.agregarVertice(vertices[v]);
+			nuevo.agregarArista(nodo, vertices[v], distancias[v]);
+		}
+		
+		return nuevo;
+	}
+	
+	public static Grafo caminosMinimos(Grafo grafo, char nodo) {
+		
+		Object[] resultado = Dijkstra.dijkstraMAHeap(grafo, nodo);
+		
+		char[] vertices = (char[]) resultado[0];
+		char[] previos = (char[]) resultado[2];
+		Grafo nuevo = new GrafoMA();
+		nuevo.inicializarGrafo();
+		
+		for(char ver : vertices)
+			nuevo.agregarVertice(ver);
+		
+		for(int v = 0; v < vertices.length; v++) {
+			char anterior = previos[v];
+			if(anterior != '-') {
+				int peso = grafo.pesoArista(anterior, vertices[v]);
+				nuevo.agregarArista(anterior, vertices[v], peso);
+			}
+		}
+		
+		return nuevo;
+		
+	}
+}
