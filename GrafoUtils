@@ -1,0 +1,23 @@
+public class GrafoUtils {
+	
+	public static int tamanioGrafo(Grafo grafo) {
+		int cant = 0;
+		Conjunto etiquetas = grafo.vertices();
+		
+		while(!etiquetas.conjuntoVacio()) {
+			cant++;
+			etiquetas.sacar(etiquetas.elegir());
+		}
+		return cant;
+	}
+	
+	public static char[] listaVertices(Conjunto vertices, int cant) {
+		char[] arregloVertices = new char[cant];
+		for(int i = 0; !vertices.conjuntoVacio(); i++) {
+			char ver = vertices.elegir();
+			arregloVertices[i] = ver;
+			vertices.sacar(ver);
+		}
+		return arregloVertices;
+	}
+}
