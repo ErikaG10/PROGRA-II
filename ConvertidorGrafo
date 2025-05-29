@@ -1,29 +1,36 @@
-public class ConvertidorGrafo {
+package func;
+import api.GrafoTDA;
+import imp.*;
+
+public class ConstructorGrafo {
 	
-	public static Grafo distanciasMinimas(Grafo grafo, char nodo) {
+	public static GrafoTDA distanciasMinimas(GrafoTDA grafo, char nodo) {
 		
-		Object[] resultado = Dijkstra.dijkstraMA(grafo, nodo);
+		Object[] resultado = Dijkstra.implementacionMA(grafo, nodo);
 		
 		char[] vertices = (char[]) resultado[0];
 		int[] distancias = (int[]) resultado[1];
-		Grafo nuevo = new GrafoMA();
+		GrafoTDA nuevo = new GrafoMAHash();
 		nuevo.inicializarGrafo();
 		
 		for(int v = 0; v < vertices.length; v++) {
+			int distancia = 0;
 			nuevo.agregarVertice(vertices[v]);
-			nuevo.agregarArista(nodo, vertices[v], distancias[v]);
+			if(distancias[v] != Integer.MAX_VALUE)
+				distancia = distancias[v];
+			nuevo.agregarArista(nodo, vertices[v], distancia);
 		}
 		
 		return nuevo;
 	}
 	
-	public static Grafo caminosMinimos(Grafo grafo, char nodo) {
+	public static GrafoTDA caminosMinimos(GrafoTDA grafo, char nodo) {
 		
-		Object[] resultado = Dijkstra.dijkstraMAHeap(grafo, nodo);
+		Object[] resultado = Dijkstra.implementacionMA(grafo, nodo);
 		
 		char[] vertices = (char[]) resultado[0];
 		char[] previos = (char[]) resultado[2];
-		Grafo nuevo = new GrafoMA();
+		GrafoTDA nuevo = new GrafoMAHash();
 		nuevo.inicializarGrafo();
 		
 		for(char ver : vertices)
@@ -39,5 +46,49 @@ public class ConvertidorGrafo {
 		
 		return nuevo;
 		
+	}
+	
+	public static GrafoTDA distanciasMinimasLA(GrafoTDA grafo, char nodo) {
+		Arista[] listaAdyacencia = GrafoUtils.listaDeAristas(grafo);
+		Object[] resultado = Dijkstra.implementacionLA(grafo, nodo, listaAdyacencia);
+		
+		char[] vertices = (char[]) resultado[0];
+		int[] distancias = (int[]) resultado[1];
+		GrafoTDA nuevo = new GrafoMAHash();
+		nuevo.inicializarGrafo();
+		
+		for(int v = 0; v < vertices.length; v++) {
+			int distancia = 0;
+			nuevo.agregarVertice(vertices[v]);
+			if(distancias[v] != Integer.MAX_VALUE)
+				distancia = distancias[v];
+			nuevo.agregarArista(nodo, vertices[v], distancia);
+		}
+		
+		return nuevo;
+	}
+	
+	
+	public static GrafoTDA caminosMinimosLA(GrafoTDA grafo, char nodo) {
+		Arista[] listaAdyacencia = GrafoUtils.listaDeAristas(grafo);
+		Object[] resultado = Dijkstra.implementacionLA(grafo, nodo, listaAdyacencia);
+		
+		char[] vertices = (char[]) resultado[0];
+		char[] previos = (char[]) resultado[2];
+		GrafoTDA nuevo = new GrafoMAHash();
+		nuevo.inicializarGrafo();
+		
+		for(char ver : vertices)
+			nuevo.agregarVertice(ver);
+		
+		for(int v = 0; v < vertices.length; v++) {
+			char anterior = previos[v];
+			if(anterior != '-') {
+				int peso = grafo.pesoArista(anterior, vertices[v]);
+				nuevo.agregarArista(anterior, vertices[v], peso);
+			}
+		}
+		
+		return nuevo;
 	}
 }
