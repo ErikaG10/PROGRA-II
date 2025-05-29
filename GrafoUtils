@@ -1,8 +1,11 @@
+package func;
+import api.*;
+import imp.*;
+
 public class GrafoUtils {
 	
-	public static int tamanioGrafo(Grafo grafo) {
+	public static int tamanioConjunto(ConjuntoTDA etiquetas) {
 		int cant = 0;
-		Conjunto etiquetas = grafo.vertices();
 		
 		while(!etiquetas.conjuntoVacio()) {
 			cant++;
@@ -11,7 +14,7 @@ public class GrafoUtils {
 		return cant;
 	}
 	
-	public static char[] listaVertices(Conjunto vertices, int cant) {
+	public static char[] listaDeVertices(ConjuntoTDA vertices, int cant) {
 		char[] arregloVertices = new char[cant];
 		for(int i = 0; !vertices.conjuntoVacio(); i++) {
 			char ver = vertices.elegir();
@@ -20,4 +23,27 @@ public class GrafoUtils {
 		}
 		return arregloVertices;
 	}
+	
+	
+	public static Arista[] listaDeAristas(GrafoTDA grafo) {
+		int cant = tamanioConjunto(grafo.vertices());
+		char[] vertices = listaDeVertices(grafo.vertices(), cant);
+		Arista[] listaAdyacencia = new Arista[cant];
+		
+		for(int inicio = 0; inicio < vertices.length; inicio++) {
+			for(int destino = 0; destino < vertices.length; destino++) {
+				if(grafo.existeArista(vertices[inicio], vertices[destino])) {
+					Arista arista = new Arista();
+					arista.destino = vertices[destino];
+					arista.peso = grafo.pesoArista(vertices[inicio], vertices[destino]);
+					arista.inx = destino;
+					arista.siguiente = listaAdyacencia[inicio];
+					listaAdyacencia[inicio] = arista;
+				}
+			}
+		}
+		return listaAdyacencia;
+	}
+	
+	
 }
