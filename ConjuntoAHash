@@ -1,0 +1,52 @@
+package imp;
+import java.util.HashMap;
+
+import api.ConjuntoTDA;
+
+public class ConjuntoAHash implements ConjuntoTDA {
+	char[] arr;		
+	int cant;
+	HashMap<Character, Integer> mapa;
+	
+	@Override
+	public void inicializarConjunto() {	
+		arr = new char[50];				
+		cant = 0;
+		mapa = new HashMap<>();
+	}
+
+	@Override
+	public void agregar(char x) {		
+		if (!this.pertenece(x))	{		
+			arr[cant] = x;
+			mapa.put(x, cant);
+			cant++;
+		}
+	}
+
+	@Override
+	public void sacar(char x) {				
+	    if (this.pertenece(x)) {
+	        int i = mapa.get(x);
+	        arr[i] = arr[cant - 1];                
+	        mapa.put(arr[cant - 1], i);            
+	        mapa.remove(x);                 
+	        cant--;
+	    }
+	}
+
+	@Override
+	public char elegir() {					
+		return arr[0];
+	}
+
+	@Override
+	public boolean pertenece(char x) {		 
+		return (mapa.containsKey(x));				
+	}
+
+	@Override
+	public boolean conjuntoVacio() {		
+		return (cant == 0);					
+	}
+}
