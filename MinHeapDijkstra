@@ -1,4 +1,7 @@
-public class MinHeap{
+package imp;
+import java.util.*;
+
+public class MinHeapAO{
 	
 	class Elemento{
 		int prioridad;
@@ -25,6 +28,11 @@ public class MinHeap{
 		
 		bar.prioridad = auxP;
 		bar.valor = auxV;
+		
+		int posFoo = mapaNodos.get(foo.valor);
+		int posBar = mapaNodos.get(bar.valor);
+		mapaNodos.put(foo.valor, posBar);
+		mapaNodos.put(bar.valor, posFoo);
 	}
 	
 	
@@ -72,8 +80,9 @@ public class MinHeap{
 
 	
 	public void desacolar() {
-		intercambiarNodos(heap[0], heap[cant-1]);
 		
+		intercambiarNodos(heap[0], heap[cant-1]);
+		mapaNodos.remove(heap[cant-1].valor);
 		cant--;
 		hundir(0);
 
