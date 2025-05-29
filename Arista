@@ -1,0 +1,8 @@
+package imp;
+
+public class Arista {
+	public char destino;
+	public int inx;
+	public int peso;
+	public Arista siguiente;
+}
