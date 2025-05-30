@@ -24,12 +24,13 @@ public class GrafoUtils {
 		return arregloVertices;
 	}
 	
-	
+	//CONVIERTE EL GRAFO A UNA ESTRUCTURA DE LISTA DE ADYACENCIA
 	public static Arista[] listaDeAristas(GrafoTDA grafo) {
 		int cant = tamanioConjunto(grafo.vertices());
 		char[] vertices = listaDeVertices(grafo.vertices(), cant);
 		Arista[] listaAdyacencia = new Arista[cant];
-		
+
+		//RECORRE TODAS LAS COMBINACIONES POSIBLES(INICIO, DESTINO)		
 		for(int inicio = 0; inicio < vertices.length; inicio++) {
 			for(int destino = 0; destino < vertices.length; destino++) {
 				if(grafo.existeArista(vertices[inicio], vertices[destino])) {
