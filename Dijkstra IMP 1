@@ -1,15 +1,17 @@
 public class Dijkstra {
+		//IMPLEMENTACION DEL LIBRO
 	
 	 public static void delLibro(int tamanio, int[][] mAdy, int nodo, int[] dist, int[] pred) {
         boolean[] visitados = new boolean[tamanio];
         
         for (int v = 0; v < tamanio; ++v) {
-            dist[v] = Integer.MAX_VALUE;
-            pred[v] = -1;
+            dist[v] = Integer.MAX_VALUE; //SE INICIALIZAN TODAS LAS DISTANCIAS COMO INFINITO
+            pred[v] = -1;      //SIGNIFICA SIN PREDECESOR
             visitados[v] = false;
         }
-        dist[nodo] = 0;
+        dist[nodo] = 0;   //INICIALIZA LA DISTANCIA EN 0 DE NODO ORIGEN
 
+	//BUSCA EL NODO NO VISITADO CON MENOR DISTANCIA
         while (true) {
             int u = -1;
             int sd = Integer.MAX_VALUE;
@@ -22,14 +24,15 @@ public class Dijkstra {
             if (u == -1) break; // no reachable unvisited vertex
             
             visitados[u] = true;
-            
+
+            //RECORRE TODOS LOS VECINO DEL NODO ACTUAL
             for (int v = 0; v < tamanio; v++) {
                 int w = mAdy[u][v];
                 if (v == u) continue;
                 
                 // Check for valid edge and avoid overflow
                 if (dist[u] != Integer.MAX_VALUE && w != Integer.MAX_VALUE) {
-                    long newLen = (long) dist[u] + w;
+                    long newLen = (long) dist[u] + w; ////////
                     if (newLen < dist[v]) {
                         dist[v] = (int) newLen;
                         pred[v] = u;
