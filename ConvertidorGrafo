@@ -3,7 +3,8 @@ import api.GrafoTDA;
 import imp.*;
 
 public class ConstructorGrafo {
-	
+
+	//DISTANCIAS MINIMAS: DESDE UN NODO ORIGEN A TODOS LOS DEMAS(CADA UNO)
 	public static GrafoTDA distanciasMinimas(GrafoTDA grafo, char nodo) {
 		
 		Object[] resultado = Dijkstra.implementacionMA(grafo, nodo);
@@ -23,7 +24,7 @@ public class ConstructorGrafo {
 		
 		return nuevo;
 	}
-	
+	//CAMINOS MINIMOS: DESDE ESE NODO ORIGEN
 	public static GrafoTDA caminosMinimos(GrafoTDA grafo, char nodo) {
 		
 		Object[] resultado = Dijkstra.implementacionMA(grafo, nodo);
