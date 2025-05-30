@@ -6,31 +6,35 @@ public class Dijkstra {
 	
 	public static Object[] implementacionMA(GrafoTDA grafo, char nodo) {
 		int cant = GrafoUtils.tamanioConjunto(grafo.vertices());
-		int[] distancia = new int[cant];
+		int[] distancia = new int[cant];     
 		boolean[] visitados = new boolean[cant];
-		char[] previos = new char[cant];
-		char[] vertices = GrafoUtils.listaDeVertices(grafo.vertices(), cant);
-		
+		char[] previos = new char[cant];   //el nodo anterior en el camino mas corto
+		char[] vertices = GrafoUtils.listaDeVertices(grafo.vertices(), cant); // SE OBTIENE LA LISTA DE VERTICES DEL GRAFO
+
+
+		//INICIALIZACION DE DISTANCIAS
 		for(int v = 0; v < cant ; v++) {
-			if(vertices[v] == nodo){
-				distancia[v] = 0;
+			if(vertices[v] == nodo){     //si el nodo es el origen: 
+				distancia[v] = 0; //SE ASIGNA 0 AL NODO ORIGEN
 				visitados[v] = true;
 				previos[v] = '-';
 			}
 			else {
-				if(grafo.existeArista(nodo, vertices[v])) {
-					distancia[v] = grafo.pesoArista(nodo, vertices[v]);
-					previos[v] = nodo;
+				if(grafo.existeArista(nodo, vertices[v])) { //si hay una arista directa del nodo al otro: 
+					distancia[v] = grafo.pesoArista(nodo, vertices[v]); //la distancia es el peso de la arista
+					previos[v] = nodo; //el previous es el nodo anterior
 				}
 				else {
-					distancia[v] = Integer.MAX_VALUE;
+					distancia[v] = Integer.MAX_VALUE;  // SI NO HAY CONEXION DIRECTA: INFINITO AL RESTO DE VERTICES(en un principio)
 					previos[v] = '-';
 				}
 			}
 		}
-		
+
+		//ESTE BUCLE CONTINUA HASTA QUE NO HAYA MAS NODOS SIN VISITAR
 		boolean quedanVertices = true;
 		while(quedanVertices) {
+			//BUSCA EL NODO NO VISITADO CON MENOR DISTANCIA...
 			int seleccionado = -1;
 			int distanciaMenor = Integer.MAX_VALUE;
 			for(int u = 0; u < cant; u++) {
@@ -39,14 +43,16 @@ public class Dijkstra {
 					distanciaMenor = distancia[u];
 				}
 			}
-			if(seleccionado == -1) {quedanVertices = false; break;}
+			if(seleccionado == -1) {quedanVertices = false; break;} //VERIFICA SI SE ENCONTRO UNO
 			
-			visitados[seleccionado] = true;
+			visitados[seleccionado] = true;  //SE MARCA COMO VISITADO
+
+			//SE EVALUA TODOS LOS VECINO DEL NODO SELECCIONADO
 			for(int vecino = 0; vecino < cant; vecino++) {
 				if(vecino == seleccionado) continue;
 				
 				int distVecinos = grafo.pesoArista(vertices[seleccionado], vertices[vecino]);
-				if((distVecinos != 0) && ((distancia[seleccionado] + distVecinos) < distancia[vecino])) { 
+				if((distVecinos != 0) && ((distancia[seleccionado] + distVecinos) < distancia[vecino])) { //se actualiza solo si existe una arista y la nueva distancia es menor a la actual.
 					distancia[vecino] = distancia[seleccionado] + distVecinos;
 					previos[vecino] = vertices[seleccionado];
 				}
@@ -54,16 +60,19 @@ public class Dijkstra {
 		}
 		return new Object[] {vertices, distancia, previos};
 	}
-	
-	
+
+
+
+	//LISTA DE ADYACENCIA: CADA NODO GUARDA UNA LISTA DE SUS VECINOS. ADEMAS SE USA COLA DE PRIORIDAD CON MINHEAP PARA SELECCIONAR EL NODO CON MENOR DISTANCIA DE FORMA EFICIENTE
+
 	public static Object[] implementacionLA(GrafoTDA grafo, char nodo, Arista[] listaAdyacencia) {
 		int cant = GrafoUtils.tamanioConjunto(grafo.vertices());
 		int[] distancia = new int[cant];
 		char[] previos = new char[cant];
 		char[] vertices = GrafoUtils.listaDeVertices(grafo.vertices(), cant);
-		MinHeapAO colaPr = new MinHeapAO();
+		MinHeapAO colaPr = new MinHeapAO();          
 		
-		colaPr.inicializarHeap();
+		colaPr.inicializarHeap();                //SE INSERTAN LOS VERTICES CON SUS DISTANCIAS EN LA COLA
 		for(int v = 0; v < cant ; v++) {
 			if(vertices[v] == nodo){
 				distancia[v] = 0;
@@ -85,12 +94,12 @@ public class Dijkstra {
 		
 		
 		while(!colaPr.heapVacio()) {
-			if(colaPr.raiz() == Integer.MAX_VALUE) break;
+			if(colaPr.raiz() == Integer.MAX_VALUE) break; //SI EL NODO CERCANO TIENE INFITO CORTO EL BUCLE PORQUE YA NO HAY CAMINOS POSIBLES . PERO SI DESPUES DE ESE HABIAN CAMINOS?????????????????
 			
-			int seleccionado = colaPr.primero();
-			colaPr.desacolar();
-			Arista vecino = listaAdyacencia[seleccionado];
-			
+			int seleccionado = colaPr.primero();  //DA EL INDICE DEL NODO CON MENOR DISTANCIA
+			colaPr.desacolar(); // LO SACAMOS
+
+			Arista vecino = listaAdyacencia[seleccionado]; //NOS DA LA LISTA ENLAZADA DE VECINOS DEL NODO
 			while(vecino != null) {
 				int distanciaOrigen = distancia[seleccionado] + vecino.peso;
 				if(distanciaOrigen < distancia[vecino.inx]) {
