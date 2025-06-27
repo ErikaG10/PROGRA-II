@@ -1,0 +1,13 @@
+package pruebaAvl2;
+
+
+public interface ABB {
+	void inicializarArbol();
+	void agregarElemento(int x);
+	void eliminarElemento(int x);
+	boolean arbolVacio();
+	int raiz();
+	ABB izq();
+	ABB der();
+	void mostrarAbb(char x);
+}
