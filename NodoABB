@@ -1,0 +1,8 @@
+package pruebaAvl2;
+
+public class Nodo {
+	int info;
+	ABB izq;
+	ABB der;
+	int altura;
+}
