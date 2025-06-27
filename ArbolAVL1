@@ -1,0 +1,200 @@
+package pruebaAvl2;
+
+
+public class ArbolAVL_C implements ABB {
+
+	private Nodo raiz;
+	
+	@Override
+	public void inicializarArbol() {
+		raiz = null;
+	}
+
+	@Override
+	public void agregarElemento(int x) {
+		if (raiz == null) {
+			raiz = new Nodo();
+			raiz.info = x;
+			raiz.izq = new ArbolAVL_C();
+			raiz.izq.inicializarArbol();
+			raiz.der = new ArbolAVL_C();
+			raiz.der.inicializarArbol();
+		} else if (raiz.info > x ) {
+			raiz.izq.agregarElemento(x);
+		} else if (raiz.info < x) {
+			raiz.der.agregarElemento(x);
+		}
+		
+		actualizarAltura(this);
+		System.out.println("" + x + "A:"+altura(this) + "B: "+ balance(this));
+		rotacion();
+	}
+
+	@Override
+	public void eliminarElemento(int x) {
+		if (raiz != null) {
+			if (raiz.info == x && raiz.izq.arbolVacio() && raiz.der.arbolVacio()) {
+				raiz = null;
+			} else if (raiz.info == x && !raiz.izq.arbolVacio()) {
+				raiz.info = this.mayor(raiz.izq);
+				raiz.izq.eliminarElemento(raiz.info);
+			} else if (raiz.info == x) {
+				raiz.info = this.menor(raiz.der);
+				raiz.der.eliminarElemento(raiz.info);
+			} if (raiz.info < x) {
+				raiz.der.eliminarElemento(x);
+			} else {
+				raiz.izq.eliminarElemento(x);
+			}
+		}
+	}
+
+	@Override
+	public int raiz() {
+		return raiz.info;
+	}
+
+	@Override
+	public ABB izq() {
+		return raiz.izq;
+	}
+
+	@Override
+	public ABB der() {
+		return raiz.der;
+	}
+
+	@Override
+	public boolean arbolVacio() {
+		return (raiz == null);
+	}
+
+	private int mayor(ABB a){
+		if (a.der().arbolVacio())
+			return a.raiz();
+		else
+			return mayor(a.der());
+	}
+	
+	private int menor(ABB a){
+		if (a.izq().arbolVacio())
+			return a.raiz();
+		else
+			return menor(a.izq());
+	}
+	
+	private int altura(ABB arbol) {
+		if(arbol.arbolVacio())
+			return -1;
+		else {
+			return ((ArbolAVL_C) arbol).raiz.altura;
+		}
+	}
+	
+	private void actualizarAltura(ABB arbol) {
+		if (!arbol.arbolVacio()) {
+	        int alturaIzq = altura(arbol.izq());
+	        int alturaDer = altura(arbol.der());
+	        ((ArbolAVL_C)arbol).raiz.altura = 1 + Math.max(alturaIzq, alturaDer);
+	    }
+	}
+	
+	private int balance(ABB nodo) {
+		if(nodo.arbolVacio())
+			return 0;
+		else
+			return (altura(nodo.izq()) - altura(nodo.der()));
+	}
+	
+	
+	private ABB rotarDer(ABB nodo) {
+		Nodo nodoNodo = ((ArbolAVL_C )nodo).raiz;
+		ABB nuevo = nodo.izq();
+		Nodo nuevoNodo = ((ArbolAVL_C) nuevo).raiz;
+		ABB temp = nuevoNodo.der;
+		
+		nuevoNodo.der = nodo;
+		nodoNodo.izq = temp;
+		
+		actualizarAltura(nodo);
+		actualizarAltura(nuevo);
+		return nuevo;
+		
+	}
+	
+	private ABB rotarIzq(ABB nodo) {
+		Nodo nodoNodo = ((ArbolAVL_C )nodo).raiz;
+		ABB nuevo = nodo.der();
+		Nodo nuevoNodo = ((ArbolAVL_C) nuevo).raiz;
+		ABB temp = nuevoNodo.izq;
+		
+		nuevoNodo.izq = nodo;
+		nodoNodo.der = temp;
+		
+		actualizarAltura(nodo);
+		actualizarAltura(nuevo);
+		return nuevo;
+		
+	}
+	
+	
+	private void rotacion() {
+	    int balance = balance(this);
+	    if (balance > 1) {
+	        if (balance(raiz.izq) < 0) {
+	            raiz.izq = rotarIzq(raiz.izq);
+	        }
+	       rotarDer(this);
+	    } else if (balance < -1) {
+	        if (balance(raiz.der) > 0) {
+	            raiz.der = rotarDer(raiz.der);
+	        }
+	        rotarIzq(this);
+	    }
+	}
+
+	
+	
+	
+	
+	
+	public void mostrarAbb(char p) {
+		switch(p) {
+		case 'e':
+			preOrder(this);
+			break;
+		case 'o':
+			postOrder(this);
+			break;
+		default:
+			inOrder(this);
+			break;
+		}
+		System.out.println("");
+	}
+	
+	private void preOrder(ABB a) {
+		if(!a.arbolVacio()) {
+			System.out.print(a.raiz() + " " + balance(a)) ;
+			preOrder(a.izq());
+			preOrder(a.der());
+		}
+	}
+	
+	private void inOrder(ABB a) {
+		if(!a.arbolVacio()) {
+			inOrder(a.izq());
+			System.out.print(a.raiz()+ " ");
+			inOrder(a.der());
+		}
+	}
+	
+	private void postOrder(ABB a) {
+		if(!a.arbolVacio()) {
+			postOrder(a.izq());
+			postOrder(a.der());
+			System.out.print(a.raiz()+ " ");
+		}
+	}
+}
+
