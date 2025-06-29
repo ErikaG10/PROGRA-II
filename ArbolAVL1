@@ -26,7 +26,7 @@ public class ArbolAVL_C implements ABB {
 		}
 		
 		actualizarAltura(this);
-		System.out.println("" + x + "A:"+altura(this) + "B: "+ balance(this));
+		System.out.println("" + x +  " C:" + this.raiz() +" A:"+altura(this) + " B:"+ balance(this));
 		rotacion();
 	}
 
@@ -122,7 +122,13 @@ public class ArbolAVL_C implements ABB {
 		
 	}
 	
+	/*
 	private ABB rotarIzq(ABB nodo) {
+		
+		int valorAux = this.raiz.info;
+		Nodo viejo = new Nodo();
+		//viejo.info =
+		
 		Nodo nodoNodo = ((ArbolAVL_C )nodo).raiz;
 		ABB nuevo = nodo.der();
 		Nodo nuevoNodo = ((ArbolAVL_C) nuevo).raiz;
@@ -135,20 +141,52 @@ public class ArbolAVL_C implements ABB {
 		actualizarAltura(nuevo);
 		return nuevo;
 		
+	}*/
+	
+	private ABB rotarIzq(ABB origen) {
+		
+		ABB nuevo = origen.der();
+		ABB menor = origen.izq();
+		ABB medio = nuevo.izq();
+		ABB ultimo = nuevo.der();
+		
+		Nodo origenNodo = ((ArbolAVL_C)origen).raiz;
+		Nodo nuevoNodo = ((ArbolAVL_C)nuevo).raiz;
+		
+		int aux = origen.raiz();
+		origenNodo.info = nuevo.raiz();
+		nuevoNodo.info = aux;
+		
+		origenNodo.izq = nuevo;
+		origenNodo.der = ultimo;
+		
+		nuevoNodo.der = medio;
+		nuevoNodo.izq = menor;
+		
+		actualizarAltura(origen);
+		actualizarAltura(nuevo);
+		return nuevo;
+		
 	}
 	
 	
 	private void rotacion() {
 	    int balance = balance(this);
 	    if (balance > 1) {
+	    	
 	        if (balance(raiz.izq) < 0) {
 	            raiz.izq = rotarIzq(raiz.izq);
 	        }
+	        
 	       rotarDer(this);
+	       
+	       
 	    } else if (balance < -1) {
+	    	
 	        if (balance(raiz.der) > 0) {
 	            raiz.der = rotarDer(raiz.der);
 	        }
+	        
 	        rotarIzq(this);
 	    }
 	}
@@ -175,7 +213,7 @@ public class ArbolAVL_C implements ABB {
 	
 	private void preOrder(ABB a) {
 		if(!a.arbolVacio()) {
-			System.out.print(a.raiz() + " " + balance(a)) ;
+			System.out.print(a.raiz() + " ") ;
 			preOrder(a.izq());
 			preOrder(a.der());
 		}
