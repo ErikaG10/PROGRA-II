@@ -1,9 +1,9 @@
-package pruebaAvl2;
+package pruebaAvl4;
 
 
-public class ArbolAVL_C implements ABB {
+public class ArbolAVL implements ABB {
 
-	private Nodo raiz;
+	private NodoAB raiz;
 	
 	@Override
 	public void inicializarArbol() {
@@ -11,18 +11,18 @@ public class ArbolAVL_C implements ABB {
 	}
 
 	@Override
-	public void agregarElemento(int x) {
+	public void insertar(int x) {
 		if (raiz == null) {
-			raiz = new Nodo();
+			raiz = new NodoAB();
 			raiz.info = x;
-			raiz.izq = new ArbolAVL_C();
+			raiz.izq = new ArbolAVL();
 			raiz.izq.inicializarArbol();
-			raiz.der = new ArbolAVL_C();
+			raiz.der = new ArbolAVL();
 			raiz.der.inicializarArbol();
 		} else if (raiz.info > x ) {
-			raiz.izq.agregarElemento(x);
+			raiz.izq.insertar(x);
 		} else if (raiz.info < x) {
-			raiz.der.agregarElemento(x);
+			raiz.der.insertar(x);
 		}
 		
 		actualizarAltura(this);
@@ -31,20 +31,20 @@ public class ArbolAVL_C implements ABB {
 	}
 
 	@Override
-	public void eliminarElemento(int x) {
+	public void eliminar(int x) {
 		if (raiz != null) {
 			if (raiz.info == x && raiz.izq.arbolVacio() && raiz.der.arbolVacio()) {
 				raiz = null;
 			} else if (raiz.info == x && !raiz.izq.arbolVacio()) {
 				raiz.info = this.mayor(raiz.izq);
-				raiz.izq.eliminarElemento(raiz.info);
+				raiz.izq.eliminar(raiz.info);
 			} else if (raiz.info == x) {
 				raiz.info = this.menor(raiz.der);
-				raiz.der.eliminarElemento(raiz.info);
+				raiz.der.eliminar(raiz.info);
 			} if (raiz.info < x) {
-				raiz.der.eliminarElemento(x);
+				raiz.der.eliminar(x);
 			} else {
-				raiz.izq.eliminarElemento(x);
+				raiz.izq.eliminar(x);
 			}
 		}
 	}
@@ -87,7 +87,7 @@ public class ArbolAVL_C implements ABB {
 		if(arbol.arbolVacio())
 			return -1;
 		else {
-			return ((ArbolAVL_C) arbol).raiz.altura;
+			return ((ArbolAVL) arbol).raiz.altura;
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class ArbolAVL_C implements ABB {
 		if (!arbol.arbolVacio()) {
 	        int alturaIzq = altura(arbol.izq());
 	        int alturaDer = altura(arbol.der());
-	        ((ArbolAVL_C)arbol).raiz.altura = 1 + Math.max(alturaIzq, alturaDer);
+	        ((ArbolAVL)arbol).raiz.altura = 1 + Math.max(alturaIzq, alturaDer);
 	    }
 	}
 	
@@ -103,45 +103,34 @@ public class ArbolAVL_C implements ABB {
 		if(nodo.arbolVacio())
 			return 0;
 		else
-			return (altura(nodo.izq()) - altura(nodo.der()));
+			return (altura(nodo.der()) - altura(nodo.izq()));
 	}
 	
 	
-	private ABB rotarDer(ABB nodo) {
-		Nodo nodoNodo = ((ArbolAVL_C )nodo).raiz;
-		ABB nuevo = nodo.izq();
-		Nodo nuevoNodo = ((ArbolAVL_C) nuevo).raiz;
-		ABB temp = nuevoNodo.der;
+	private ABB rotarDer(ABB origen) {
+		ABB nuevo = origen.izq();
+		ABB mayor = origen.der();
+		ABB medio = nuevo.der();
+		ABB ultimo = nuevo.izq();
 		
-		nuevoNodo.der = nodo;
-		nodoNodo.izq = temp;
+		NodoAB origenNodo = ((ArbolAVL)origen).raiz;
+		NodoAB nuevoNodo = ((ArbolAVL)nuevo).raiz;
 		
-		actualizarAltura(nodo);
+		int aux = origen.raiz();
+		origenNodo.info = nuevo.raiz();
+		nuevoNodo.info = aux;
+		
+		origenNodo.der = nuevo;
+		origenNodo.izq = ultimo;
+		
+		nuevoNodo.der = mayor;
+		nuevoNodo.izq = medio;
+		
+
 		actualizarAltura(nuevo);
+		actualizarAltura(origen);
 		return nuevo;
-		
 	}
-	
-	/*
-	private ABB rotarIzq(ABB nodo) {
-		
-		int valorAux = this.raiz.info;
-		Nodo viejo = new Nodo();
-		//viejo.info =
-		
-		Nodo nodoNodo = ((ArbolAVL_C )nodo).raiz;
-		ABB nuevo = nodo.der();
-		Nodo nuevoNodo = ((ArbolAVL_C) nuevo).raiz;
-		ABB temp = nuevoNodo.izq;
-		
-		nuevoNodo.izq = nodo;
-		nodoNodo.der = temp;
-		
-		actualizarAltura(nodo);
-		actualizarAltura(nuevo);
-		return nuevo;
-		
-	}*/
 	
 	private ABB rotarIzq(ABB origen) {
 		
@@ -150,8 +139,8 @@ public class ArbolAVL_C implements ABB {
 		ABB medio = nuevo.izq();
 		ABB ultimo = nuevo.der();
 		
-		Nodo origenNodo = ((ArbolAVL_C)origen).raiz;
-		Nodo nuevoNodo = ((ArbolAVL_C)nuevo).raiz;
+		NodoAB origenNodo = ((ArbolAVL)origen).raiz;
+		NodoAB nuevoNodo = ((ArbolAVL)nuevo).raiz;
 		
 		int aux = origen.raiz();
 		origenNodo.info = nuevo.raiz();
@@ -163,31 +152,38 @@ public class ArbolAVL_C implements ABB {
 		nuevoNodo.der = medio;
 		nuevoNodo.izq = menor;
 		
-		actualizarAltura(origen);
 		actualizarAltura(nuevo);
+		actualizarAltura(origen);
 		return nuevo;
 		
 	}
 	
 	
 	private void rotacion() {
+		
 	    int balance = balance(this);
-	    if (balance > 1) {
+	    
+	    if (balance < -1) {
+	    	System.out.println("Llamamos rotacion D en: " + raiz.info);
 	    	
-	        if (balance(raiz.izq) < 0) {
-	            raiz.izq = rotarIzq(raiz.izq);
+	        if (balance(raiz.izq) > 0) {
+	            rotarIzq(raiz.izq);
+	            System.out.println("Rotacion Doble Izq");
 	        }
 	        
 	       rotarDer(this);
+	       System.out.println("Rotacion Der");
 	       
-	       
-	    } else if (balance < -1) {
+	    } else if (balance > 1) {
+	    	System.out.println("Llamamos rotacion I en: " + raiz.info);
 	    	
-	        if (balance(raiz.der) > 0) {
-	            raiz.der = rotarDer(raiz.der);
+	        if (balance(raiz.der) < 0) {
+	            rotarDer(raiz.der);
+	            System.out.println("Rotacion Doble Der");
 	        }
 	        
 	        rotarIzq(this);
+	        System.out.println("Rotacion Izq");
 	    }
 	}
 
