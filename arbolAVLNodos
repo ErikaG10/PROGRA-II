@@ -1,0 +1,248 @@
+package PruebaAvl5;
+
+public class ArbolAvlN implements ABB{
+	
+	NodoAN raiz;
+
+	@Override
+	public void inicializarArbol() {
+		this.raiz = null;
+		
+	}
+
+	@Override
+	public void insertar(int info) {
+		raiz = insertarRec(info, raiz);
+		
+	}
+	
+	private NodoAN insertarRec(int valor, NodoAN nodo) {
+		if(nodo == null) {
+			NodoAN nuevo = new NodoAN();
+			nuevo.info = valor;
+			nuevo.altura = 0;
+			System.out.println("" + valor +  " C:" + nuevo.info +" A:"+altura(nuevo) + " B:"+ balance(nuevo));
+			return nuevo;
+		}
+		
+		if(nodo.info == valor) {
+			return nodo;
+		}
+		
+		if(nodo.info > valor) {
+			nodo.izq = insertarRec(valor, nodo.izq);
+		} else if(nodo.info < valor) {
+			nodo.der = insertarRec(valor, nodo.der);
+		}
+		
+		actualizarAltura(nodo);
+		System.out.println("" + valor +  " C:" + nodo.info +" A:"+altura(nodo) + " B:"+ balance(nodo));
+		return rotacion(nodo);
+	}
+	
+	
+	private int altura(NodoAN nodo) {
+		if(nodo == null)
+			return -1;
+		else
+			return nodo.altura;
+	}
+	
+	private int balance(NodoAN nodo) {
+		if(nodo == null)
+			return 0;
+		else
+			return (altura(nodo.der) - altura(nodo.izq));
+	}
+	
+	private void actualizarAltura(NodoAN nodo) {
+		if(nodo != null) {
+			int alturaIzq = altura(nodo.izq);
+			int alturaDer = altura(nodo.der);
+			nodo.altura = 1 + Math.max(alturaIzq, alturaDer);
+		}
+	}
+	
+	private NodoAN rotarDer(NodoAN origen) {
+		NodoAN nuevo = origen.izq;
+		NodoAN centro = nuevo.der;
+		
+		nuevo.der = origen;
+		origen.izq = centro;
+		
+		actualizarAltura(origen);
+		actualizarAltura(nuevo);
+		return nuevo;
+	}
+	
+	private NodoAN rotarIzq(NodoAN origen) {
+		NodoAN nuevo = origen.der;
+		NodoAN centro = nuevo.izq;
+		
+		nuevo.izq = origen;
+		origen.der = centro;
+		
+		actualizarAltura(origen);
+		actualizarAltura(nuevo);
+		return nuevo;
+		
+	}
+	
+	private NodoAN rotacion(NodoAN nodo) {
+		int balance = balance(nodo);
+	    
+	    if (balance < -1) {
+	    	System.out.println("Llamamos rotacion D en: " + nodo.info);
+	    	
+	        if (balance(nodo.izq) > 0) {
+	            nodo.izq = rotarIzq(nodo.izq);
+	            System.out.println("Rotacion Doble Izq");
+
+	    		preOrder(nodo);
+	        }
+	       System.out.println("Rotacion Der");
+	       NodoAN pru = rotarDer(nodo);
+	        System.out.println("Nuevo: " + nodo.info + " "+ nodo.altura);
+	        preOrder(pru); System.out.println("f");
+	        return pru; 
+	    }
+	    
+	    else if (balance > 1) {
+	    	System.out.println("Llamamos rotacion I en: " + nodo.info);
+	    	
+	        if (balance(nodo.der) < 0) {
+	            nodo.der = rotarDer(nodo.der);
+	            System.out.println("Rotacion Doble Der");
+	            System.out.println("Nuevo: " + nodo.der.info + " "+ nodo.der.altura);
+	            preOrder(nodo);
+	        }
+	        System.out.println("Rotacion Izq");
+	        NodoAN pru = rotarIzq(nodo);
+	        System.out.println("Nuevo: " + nodo.info + " "+ nodo.altura);
+	        preOrder(pru); System.out.println("f");
+	        return pru;
+	        
+	    }
+	    return nodo;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+	@Override
+	public void eliminar(int valor) {
+		raiz = eliminarRec(valor, raiz);
+	}
+	
+	private NodoAN eliminarRec(int valor, NodoAN nodo) {
+		if(nodo == null) return null;
+		
+		if(nodo.info > valor) {
+			nodo.izq = eliminarRec(valor, nodo.izq);
+		} else if(nodo.info < valor) {
+			nodo.der = eliminarRec(valor, nodo.der);
+		} else {
+			if(nodo.izq == null)
+				return nodo.der;
+			else if(nodo.der == null)
+				return nodo.izq;
+			else {
+				nodo.info = mayor(nodo.izq);
+				nodo.izq = eliminarRec(nodo.info, nodo.izq);
+			}
+		}
+		actualizarAltura(nodo);
+		return rotacion(nodo);
+	}
+	
+	private int mayor(NodoAN nodo){
+		if (nodo.der == null)
+			return nodo.info;
+		else
+			return mayor(nodo.der);
+	}
+
+	@Override
+	public boolean arbolVacio() {
+		return (this.raiz == null);
+	}
+
+	@Override
+	public int raiz() {
+		return this.raiz.info;
+	}
+
+	@Override
+	public ABB izq() {
+		ArbolAvlN subarbol = new ArbolAvlN();
+		subarbol.inicializarArbol();
+		if(this.raiz != null)
+			subarbol.raiz = this.raiz.izq;
+		return subarbol;
+	}
+
+	@Override
+	public ABB der() {
+		ArbolAvlN subarbol = new ArbolAvlN();
+		subarbol.inicializarArbol();
+		if(this.raiz != null)
+			subarbol.raiz = this.raiz.der;
+		return subarbol;
+	}
+
+	@Override
+	public void mostrarAbb(char p) {
+		switch(p) {
+		case 'e':
+			preOrder(raiz);
+			break;
+		case 'o':
+			postOrder(raiz);
+			break;
+		default:
+			inOrder(raiz);
+			break;
+		}
+		System.out.println("");
+	}
+	
+	private void preOrder(NodoAN a) {
+		if(a != null) {
+			System.out.print(a.info + " ") ;
+			preOrder(a.izq);
+			preOrder(a.der);
+		}
+	}
+	
+	private void inOrder(NodoAN a) {
+		if(a != null) {
+			inOrder(a.izq);
+			System.out.print(a.info + " ");
+			inOrder(a.der);
+		}
+	}
+	
+	private void postOrder(NodoAN a) {
+		if(a != null) {
+			postOrder(a.izq);
+			postOrder(a.der);
+			System.out.print(a.info + " ");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+}
