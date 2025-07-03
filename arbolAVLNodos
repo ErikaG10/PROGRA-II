@@ -98,12 +98,13 @@ public class ArbolAvlN implements ABB{
 	            nodo.izq = rotarIzq(nodo.izq);
 	            System.out.println("Rotacion Doble Izq");
 
-	    		preOrder(nodo);
+	    		//preOrder(nodo);
 	        }
 	       System.out.println("Rotacion Der");
 	       NodoAN pru = rotarDer(nodo);
 	        System.out.println("Nuevo: " + nodo.info + " "+ nodo.altura);
-	        preOrder(pru); System.out.println("f");
+	        //preOrder(pru); 
+	        System.out.println("f");
 	        return pru; 
 	    }
 	    
@@ -114,12 +115,13 @@ public class ArbolAvlN implements ABB{
 	            nodo.der = rotarDer(nodo.der);
 	            System.out.println("Rotacion Doble Der");
 	            System.out.println("Nuevo: " + nodo.der.info + " "+ nodo.der.altura);
-	            preOrder(nodo);
+	            //preOrder(nodo);
 	        }
 	        System.out.println("Rotacion Izq");
 	        NodoAN pru = rotarIzq(nodo);
 	        System.out.println("Nuevo: " + nodo.info + " "+ nodo.altura);
-	        preOrder(pru); System.out.println("f");
+	        //preOrder(pru); 
+	        System.out.println("f");
 	        return pru;
 	        
 	    }
@@ -235,6 +237,9 @@ public class ArbolAvlN implements ABB{
 		}
 	}
 	
+
+}
+
 	
 	
 	
