@@ -1,9 +1,9 @@
-package pruebaAvl4;
+package PruebaAvl5;
 
 
-public class ArbolAVL implements ABB {
+public class ArbolAvlS2 implements ABB {
 
-	private NodoAB raiz;
+	private NodoAS raiz;
 	
 	@Override
 	public void inicializarArbol() {
@@ -13,11 +13,11 @@ public class ArbolAVL implements ABB {
 	@Override
 	public void insertar(int x) {
 		if (raiz == null) {
-			raiz = new NodoAB();
+			raiz = new NodoAS();
 			raiz.info = x;
-			raiz.izq = new ArbolAVL();
+			raiz.izq = new ArbolAvlS2();
 			raiz.izq.inicializarArbol();
-			raiz.der = new ArbolAVL();
+			raiz.der = new ArbolAvlS2();
 			raiz.der.inicializarArbol();
 		} else if (raiz.info > x ) {
 			raiz.izq.insertar(x);
@@ -41,11 +41,13 @@ public class ArbolAVL implements ABB {
 			} else if (raiz.info == x) {
 				raiz.info = this.menor(raiz.der);
 				raiz.der.eliminar(raiz.info);
-			} if (raiz.info < x) {
+			} else if (raiz.info < x) {
 				raiz.der.eliminar(x);
 			} else {
 				raiz.izq.eliminar(x);
 			}
+			actualizarAltura(this);
+			rotacion();
 		}
 	}
 
@@ -87,7 +89,7 @@ public class ArbolAVL implements ABB {
 		if(arbol.arbolVacio())
 			return -1;
 		else {
-			return ((ArbolAVL) arbol).raiz.altura;
+			return ((ArbolAvlS2) arbol).raiz.altura;
 		}
 	}
 	
@@ -95,7 +97,7 @@ public class ArbolAVL implements ABB {
 		if (!arbol.arbolVacio()) {
 	        int alturaIzq = altura(arbol.izq());
 	        int alturaDer = altura(arbol.der());
-	        ((ArbolAVL)arbol).raiz.altura = 1 + Math.max(alturaIzq, alturaDer);
+	        ((ArbolAvlS2)arbol).raiz.altura = 1 + Math.max(alturaIzq, alturaDer);
 	    }
 	}
 	
@@ -107,14 +109,14 @@ public class ArbolAVL implements ABB {
 	}
 	
 	
-	private ABB rotarDer(ABB origen) {
+	private void rotarDer(ABB origen) {
 		ABB nuevo = origen.izq();
 		ABB mayor = origen.der();
 		ABB medio = nuevo.der();
 		ABB ultimo = nuevo.izq();
 		
-		NodoAB origenNodo = ((ArbolAVL)origen).raiz;
-		NodoAB nuevoNodo = ((ArbolAVL)nuevo).raiz;
+		NodoAS origenNodo = ((ArbolAvlS2)origen).raiz;
+		NodoAS nuevoNodo = ((ArbolAvlS2)nuevo).raiz;
 		
 		int aux = origen.raiz();
 		origenNodo.info = nuevo.raiz();
@@ -125,22 +127,19 @@ public class ArbolAVL implements ABB {
 		
 		nuevoNodo.der = mayor;
 		nuevoNodo.izq = medio;
-		
 
 		actualizarAltura(nuevo);
 		actualizarAltura(origen);
-		return nuevo;
 	}
 	
-	private ABB rotarIzq(ABB origen) {
-		
+	private void rotarIzq(ABB origen) {
 		ABB nuevo = origen.der();
 		ABB menor = origen.izq();
 		ABB medio = nuevo.izq();
 		ABB ultimo = nuevo.der();
 		
-		NodoAB origenNodo = ((ArbolAVL)origen).raiz;
-		NodoAB nuevoNodo = ((ArbolAVL)nuevo).raiz;
+		NodoAS origenNodo = ((ArbolAvlS2)origen).raiz;
+		NodoAS nuevoNodo = ((ArbolAvlS2)nuevo).raiz;
 		
 		int aux = origen.raiz();
 		origenNodo.info = nuevo.raiz();
@@ -154,8 +153,6 @@ public class ArbolAVL implements ABB {
 		
 		actualizarAltura(nuevo);
 		actualizarAltura(origen);
-		return nuevo;
-		
 	}
 	
 	
