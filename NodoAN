@@ -1,0 +1,8 @@
+package PruebaAvl5;
+
+public class NodoAN {
+	int info;
+	int altura;
+	NodoAN izq;
+	NodoAN der;
+}
